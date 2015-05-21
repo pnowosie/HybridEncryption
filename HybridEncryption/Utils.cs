@@ -5,6 +5,24 @@ using System.Text;
 
 namespace HybridEncryption
 {
+    public static class BytesUtils
+    {
+        public static bool Compare(byte[] original, byte[] other)
+        {
+            if (other == null) return false;
+            var result = original.Length == other.Length;
+
+            // other is potencialy malicious, don't want to leak original.Length
+            for (int i = 0; i < other.Length; ++i)
+            {
+                byte originalByte = (i < original.Length) ? original[i] : (byte)0;
+                result &= originalByte == other[i];
+            }
+
+            return result;
+        }
+    }
+
     public static class SecureStringExt
     {
         public static byte[] Unprotect(this SecureString secret)
